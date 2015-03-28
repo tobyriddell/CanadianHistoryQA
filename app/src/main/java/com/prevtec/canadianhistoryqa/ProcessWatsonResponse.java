@@ -5,6 +5,7 @@ import android.util.Log;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.w3c.dom.NodeList;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -60,6 +61,33 @@ public class ProcessWatsonResponse {
         Log.e("ProcessWatsonResponse", doc.getDocumentElement().toString());
 //        doc.getElementsByTagName("evidencelist")
         Log.e("ProcessWatsonResponse - el", doc.getElementsByTagName("evidencelist").toString());
+        NodeList nl = doc.getElementsByTagName("evidencelist");
+        Log.e("ProcessWatsonResponse - evidencelist node count", Integer.toString(nl.getLength()));
+
+        // Only one <evidencelist> tag
+        NodeList nlc = doc.getElementsByTagName("evidencelist").item(0).getChildNodes();
+
+        for (int i = 0; i < nlc.getLength(); i++) {
+            Node subnode = nlc.item(i);
+            Log.e("ProcessWatsonResponse - nn", subnode.getNodeName());
+//            Log.e("ProcessWatsonResponse - tc", subnode.getTextContent());
+
+            if ( subnode.getNodeName().equals("evidence") ) {
+                Log.e("ProcessWatsonResponse", "got evidence element... processing further");
+                NodeList nlcc = subnode.getChildNodes();
+                Log.e("ProcessWatsonResponse", "this evidence element has " + Integer.toString(nlcc.getLength()) + " child nodes");
+
+                for (int j = 0; j < nlcc.getLength(); j++ ) {
+//                    Log.e("ProcessWatsonResponse", "child element " + Integer.toString(j) + " has name " + nlcc.item(j).getNodeName());
+                    if ( nlcc.item(j).getNodeName().equals("text") ) {
+                        Log.e("ProcessWatsonResponse - text", nlcc.item(j).getTextContent());
+                    } else if ( nlcc.item(j).getNodeName().equals("value"))  {
+                        Log.e("ProcessWatsonResponse - value", nlcc.item(j).getTextContent());
+                    }
+
+                }
+            }
+        }
     }
 
     String getEvidenceList() {
