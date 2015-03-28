@@ -1,42 +1,31 @@
 package com.prevtec.canadianhistoryqa;
 
-import org.json.JSONObject;
-
 import java.util.HashMap;
 
 /**
  * Created by toby on 26/03/2015.
  */
 public class WatsonQuery {
-    private String response;
+//    private HashMap<String, HashMap> question;
+
     private String question;
 
-//    final HashMap<String, Object> questionObject = null;
+    // Sample question:
+    // {
+    //     {
+    //         “question” : {
+    //             “questionText” : “Who was Sir Sam Steele?”
+    //         }
+    //     }
+    // }
 
-//    @SuppressWarnings("serial")
-//    HashMap<String, Object> question_info = new HashMap<String, Object>() {{
-//        put("questionText", "What is aperture?");
-//    }};
+    public void setQuestion(String myQuestion) {
+        this.question = "{ { \"question\" : { \"questionText\" : \"Who was Sir Sam Steele?\" } } }";
 
-    public String getResponse() {
-           return this.response;
+
+//        HashMap<String, String> questionGuts = new HashMap<String, String>();
+//        questionGuts.put("questionText", myQuestion);
+//        this.question = new HashMap<String, HashMap>();
+//        this.question.put("question", questionGuts);
     }
-
-    public void setQuestion(String question) {
-        this.question = question;
-    }
-
-//    public void setQuestion(String questionString) {
-//        HashMap<String, String> questionInner;
-//
-//        questionInner = new HashMap<String, Object>() {
-//            put("questionText", questionString);
-//        };
-//
-//        questionObject = new HashMap<String, Object>() {
-//            put("question", questionInner);
-//        };
-//
-////        this.question = question;
-//    }
 }
