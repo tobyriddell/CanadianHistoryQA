@@ -18,7 +18,6 @@ public class WatsonQuery {
 //        put("questionText", "What is aperture?");
 //    }};
 
-
     public String getResponse() {
            return this.response;
     }
