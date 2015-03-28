@@ -1,9 +1,12 @@
 package com.prevtec.canadianhistoryqa;
 
+import android.util.Log;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.*;
@@ -14,6 +17,7 @@ import org.w3c.dom.Entity;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -24,35 +28,43 @@ import java.io.PrintWriter;
 public class ProcessWatsonResponse {
     static final String outputEncoding = "UTF-8";
 
+    Document doc = null;
+
     ProcessWatsonResponse(String response) {
+        Log.e("ProcessWatsonResponse", response);
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = null;
         try {
             db = dbf.newDocumentBuilder();
         } catch (Exception e) {
-
+            // Do nothing (yet)
         }
 //        Document doc = db.parse(response);
         OutputStreamWriter errorWriter = null;
         try {
             errorWriter = new OutputStreamWriter(System.err, "UTF-8");
         } catch (Exception e) {
+            // Do nothing (yet)
         }
 
         db.setErrorHandler(new MyErrorHandler (new PrintWriter(errorWriter, true)));
-        Document doc = null;
-        try {
-            doc = db.parse(response);
-        } catch (Exception e) {
 
+        try {
+//            doc = db.parse(response);
+            doc = db.parse(new InputSource(new ByteArrayInputStream(response.getBytes("utf-8"))));
+        } catch (Exception e) {
+            Log.e("ProcessWatsonResponse", e.toString() + "\n");
         }
 
-
+        Log.e("ProcessWatsonResponse - doc", doc.toString());
+        Log.e("ProcessWatsonResponse", doc.getDocumentElement().toString());
+//        doc.getElementsByTagName("evidencelist")
+        Log.e("ProcessWatsonResponse - el", doc.getElementsByTagName("evidencelist").toString());
     }
 
     String getEvidenceList() {
-
-        return new String("");
+        return doc.getElementsByTagName("evidencelist").toString();
+//        return new String("");
     }
 
     private static class MyErrorHandler implements ErrorHandler {
