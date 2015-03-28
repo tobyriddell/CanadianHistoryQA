@@ -18,7 +18,8 @@
         android:minLines="1"
         android:singleLine="true"
         android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/textView3" />
+        android:layout_toEndOf="@+id/textView3"
+        android:inputType="text" />
 
     <TextView
         android:layout_width="wrap_content"
