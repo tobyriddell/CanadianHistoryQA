@@ -10,18 +10,17 @@ import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-import org.xml.sax.helpers.*;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.DocumentType;
-import org.w3c.dom.Entity;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by toby on 28/03/2015.
@@ -31,7 +30,20 @@ public class ProcessWatsonResponse {
 
     Document doc = null;
 
+    Map<Double, String> answers = null;
+
+    Map<Double, String> getAnswers() {
+        return answers;
+    }
+
     ProcessWatsonResponse(String response) {
+        answers = new TreeMap<Double, String>(new Comparator<Double>()
+        {
+            public int compare(Double o1, Double o2) {
+                return o2.compareTo(o1);
+            }
+        });
+
         Log.e("ProcessWatsonResponse", response);
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = null;
@@ -69,23 +81,35 @@ public class ProcessWatsonResponse {
 
         for (int i = 0; i < nlc.getLength(); i++) {
             Node subnode = nlc.item(i);
-            Log.e("ProcessWatsonResponse - nn", subnode.getNodeName());
+//            Log.e("ProcessWatsonResponse - nn", subnode.getNodeName());
 //            Log.e("ProcessWatsonResponse - tc", subnode.getTextContent());
 
             if ( subnode.getNodeName().equals("evidence") ) {
-                Log.e("ProcessWatsonResponse", "got evidence element... processing further");
+//                Log.e("ProcessWatsonResponse", "got evidence element... processing further");
                 NodeList nlcc = subnode.getChildNodes();
-                Log.e("ProcessWatsonResponse", "this evidence element has " + Integer.toString(nlcc.getLength()) + " child nodes");
+//                Log.e("ProcessWatsonResponse", "this evidence element has " + Integer.toString(nlcc.getLength()) + " child nodes");
 
+                // Need to pair up text elements with value elements
+                String text = null;
+                Double value = 0.0;
                 for (int j = 0; j < nlcc.getLength(); j++ ) {
 //                    Log.e("ProcessWatsonResponse", "child element " + Integer.toString(j) + " has name " + nlcc.item(j).getNodeName());
                     if ( nlcc.item(j).getNodeName().equals("text") ) {
-                        Log.e("ProcessWatsonResponse - text", nlcc.item(j).getTextContent());
+//                        Log.e("ProcessWatsonResponse - text", nlcc.item(j).getTextContent());
+                        text = new String(nlcc.item(j).getTextContent());
                     } else if ( nlcc.item(j).getNodeName().equals("value"))  {
-                        Log.e("ProcessWatsonResponse - value", nlcc.item(j).getTextContent());
+//                        Log.e("ProcessWatsonResponse - value", nlcc.item(j).getTextContent());
+                        value = new Double(nlcc.item(j).getTextContent());
                     }
-
+                    // We have valid text and value then make an entry in the answers
+                    if ( text != null && value != 0.0 ) {
+                        answers.put(value, text);
+                        text = null;
+                        value = 0.0;
+                    }
                 }
+                Log.e("ProcessWatsonResponse", "Finished processing response from Watson, got " + Integer.toString(nlcc.getLength()) + " answers");
+
             }
         }
     }
