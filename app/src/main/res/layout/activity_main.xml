@@ -33,14 +33,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Watson&apos;s answer goes here"
+        android:text="@string/initial_answer"
         android:id="@+id/textView"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_below="@+id/textView2"
         android:background="#ffffffff"
-        android:autoText="true" />
+        android:autoText="true"
+        android:singleLine="false" />
 
     <TextView
         android:layout_width="wrap_content"
