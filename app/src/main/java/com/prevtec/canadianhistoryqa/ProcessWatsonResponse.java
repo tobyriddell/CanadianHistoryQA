@@ -52,7 +52,6 @@ public class ProcessWatsonResponse {
         } catch (Exception e) {
             // Do nothing (yet)
         }
-//        Document doc = db.parse(response);
         OutputStreamWriter errorWriter = null;
         try {
             errorWriter = new OutputStreamWriter(System.err, "UTF-8");
@@ -69,14 +68,14 @@ public class ProcessWatsonResponse {
             Log.e("ProcessWatsonResponse", e.toString() + "\n");
         }
 
-        Log.e("ProcessWatsonResponse - doc", doc.toString());
-        Log.e("ProcessWatsonResponse", doc.getDocumentElement().toString());
+//        Log.e("ProcessWatsonResponse - doc", doc.toString());
+//        Log.e("ProcessWatsonResponse", doc.getDocumentElement().toString());
 //        doc.getElementsByTagName("evidencelist")
-        Log.e("ProcessWatsonResponse - el", doc.getElementsByTagName("evidencelist").toString());
+//        Log.e("ProcessWatsonResponse - el", doc.getElementsByTagName("evidencelist").toString());
         NodeList nl = doc.getElementsByTagName("evidencelist");
-        Log.e("ProcessWatsonResponse - evidencelist node count", Integer.toString(nl.getLength()));
+//        Log.e("ProcessWatsonResponse - evidencelist node count", Integer.toString(nl.getLength()));
 
-        // Only one <evidencelist> tag
+        // Assume only one <evidencelist> tag
         NodeList nlc = doc.getElementsByTagName("evidencelist").item(0).getChildNodes();
 
         for (int i = 0; i < nlc.getLength(); i++) {
@@ -108,8 +107,6 @@ public class ProcessWatsonResponse {
                         value = 0.0;
                     }
                 }
-                Log.e("ProcessWatsonResponse", "Finished processing response from Watson, got " + Integer.toString(nlcc.getLength()) + " answers");
-
             }
         }
     }
